@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  workspace:
+    build:
+      context: .
+      dockerfile: workspace.Dockerfile
+      target: testing
+    restart: on-failure
+    depends_on:
+      - serverapi
+    environment:
+      - SERVERAPI_URL=http://serverapi:8080/v1/account/
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=account_user
+      - DB_PASSWORD=password
+      - DB_DATABASE=account_database
+    volumes:
+      - .:/workspace:cached
+    working_dir: /workspace
+    command: ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --cover --trace --race --progress
+
+  serverapi:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    restart: on-failure
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=account_user
+      - DB_PASSWORD=password
+      - DB_DATABASE=account_database
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/workspace:cached
+    working_dir: /workspace/pkg/apiserver
+    command: CompileDaemon -command="./apiserver"
+  
+  postgres:
+    image: postgres:13
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=account_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=account_database

@@ -1,0 +1,2 @@
+GET http://serverapi:8080/v1/account/ad27e265-9605-4b4b-a0e5-3003ea9cc4dc HTTP/1.1
+Accept: application/vnd.api+json
