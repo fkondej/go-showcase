@@ -1,4 +1,5 @@
 # Go example
+[![GitHub Actions Status](https://github.com/fkondej/go-showcase/workflows/CI/badge.svg)](https://github.com/fkondej/go-showcase/actions)
 
 This repo contains a simple implementation of RESTful API (using `gin` library) and API client library in Go. The main focus is put on:
 - BDD style tests (using `Ginkgo` and `GΩmega` libraries),
